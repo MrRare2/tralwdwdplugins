@@ -75,7 +75,7 @@ export function patchActionSheets() {
             const channel = ret?.props?.channel;
             if (!channel) return;
 
-            if (!(channel.type in allowedChannelTypes)) return;
+            if (!allowedChannelTypes.includes(channel.type)) return;
 
             patches.push(
                 after("type", ret, (_, component) => {
