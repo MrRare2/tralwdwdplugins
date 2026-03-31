@@ -3,7 +3,6 @@ import { patchJumpToPresent } from "./patches/jumptopresent";
 import settings from "./components/settings";
 import { initStorage, storage } from "./storage";
 import { plugins } from "@vendetta/plugins";
-import { showCustomAlert } from "@vendetta/ui/alerts";
 import CharCounterWarningModal from "./components/CharCounterWarningModal";
 import { findByProps } from "@vendetta/metro";
 
