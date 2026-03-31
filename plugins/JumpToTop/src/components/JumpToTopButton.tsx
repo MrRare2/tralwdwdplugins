@@ -1,21 +1,17 @@
-import { logger } from "@vendetta";
-import { findByProps, findByStoreName } from "@vendetta/metro";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { ReactNative as RN } from "@vendetta/metro/common";
+import { ReactNative as RN, React } from "@vendetta/metro/common";
 import {
     jumpToTopOfCurrentChannel,
     jumpToTopOfDifferentChannel,
 } from "../utils";
 
-const Design = findByProps("Stack", "Button", "Text");
-const { IconButton } = Design;
-
 export default function JumpToTopButton({
     isNotCurrentChannel = false,
     details = {},
+    JumpToPresentButton,
 }: {
     isNotCurrentChannel: boolean;
     details: { guildId?: string; channelId?: string };
+    JumpToPresentButton: React.ReactElement;
 }) {
     return (
         // Theres no arrow up icon so we flip the arrow down one.
@@ -24,19 +20,16 @@ export default function JumpToTopButton({
                 transform: [{ scaleY: -1 }],
             }}
         >
-            <IconButton
-                onPress={
-                    isNotCurrentChannel
-                        ? () =>
-                              jumpToTopOfDifferentChannel(
-                                  details.guildId,
-                                  details.channelId,
-                              )
-                        : jumpToTopOfCurrentChannel
-                }
-                variant={"secondary"}
-                icon={getAssetIDByName("ArrowLargeDownIcon")}
-            />
+            {React.cloneElement(JumpToPresentButton, {
+                ...JumpToPresentButton.props,
+                onPress: isNotCurrentChannel
+                    ? () =>
+                          jumpToTopOfDifferentChannel(
+                              details.guildId,
+                              details.channelId,
+                          )
+                    : jumpToTopOfCurrentChannel,
+            })}
         </RN.View>
     );
 }
