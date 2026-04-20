@@ -9,6 +9,7 @@ import {
     jumpToTopOfForum,
 } from "../utils";
 import { storage } from "../storage";
+import { UpsideDown } from "../components/UpsideDown";
 
 const { ActionSheetRow } = findByProps("ActionSheetRow");
 
@@ -37,11 +38,11 @@ function buildJumpToTopRow(onPress: () => void) {
             <ActionSheetRow
                 label="Jump To Top"
                 icon={
-                    <RN.View style={{ transform: [{ scaleY: -1 }] }}>
+                    <UpsideDown>
                         <ActionSheetRow.Icon
                             source={getAssetIDByName("ArrowLargeDownIcon")}
                         />
-                    </RN.View>
+                    </UpsideDown>
                 }
                 onPress={onPress}
             />
