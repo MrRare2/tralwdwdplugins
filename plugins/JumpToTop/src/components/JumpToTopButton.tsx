@@ -1,8 +1,6 @@
 import { ReactNative as RN, React } from "@vendetta/metro/common";
-import {
-    jumpToTopOfCurrentChannel,
-    jumpToTopOfDifferentChannel,
-} from "../utils";
+import { jumpToTop } from "../utils";
+import { UpsideDown } from "./UpsideDown";
 
 export default function JumpToTopButton({
     isNotCurrentChannel = false,
@@ -15,21 +13,11 @@ export default function JumpToTopButton({
 }) {
     return (
         // Theres no arrow up icon so we flip the arrow down one.
-        <RN.View
-            style={{
-                transform: [{ scaleY: -1 }],
-            }}
-        >
+        <UpsideDown>
             {React.cloneElement(JumpToPresentButton, {
                 ...JumpToPresentButton.props,
-                onPress: isNotCurrentChannel
-                    ? () =>
-                          jumpToTopOfDifferentChannel(
-                              details.guildId,
-                              details.channelId,
-                          )
-                    : jumpToTopOfCurrentChannel,
+                onPress: jumpToTop(isNotCurrentChannel, details),
             })}
-        </RN.View>
+        </UpsideDown>
     );
 }

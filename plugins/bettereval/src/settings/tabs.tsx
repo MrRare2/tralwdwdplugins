@@ -1,7 +1,7 @@
 // Adapted from: https://github.com/nexpid/RevengePlugins/blob/main/src/stuff/lib/pinToSettings/tabs.tsx
 
 import { findByName, findByProps } from "@vendetta/metro";
-import { after } from "@vendetta/patcher";
+import { after } from "@lib/patcher";
 import { manifest } from "@vendetta/plugin";
 import { findInReactTree } from "@vendetta/utils";
 
@@ -23,9 +23,10 @@ export function patchTabsUI(tile: SettingsTile) {
             type: "pressable",
             title: tile.title,
             icon: tile.icon,
-            IconComponent: tile.icon && (() => <TableRowIcon source={tile.icon} />),
+            IconComponent:
+                tile.icon && (() => <TableRowIcon source={tile.icon} />),
             usePredicate: tile.predicate,
-			useTrailing: tile.trailing,
+            useTrailing: tile.trailing,
             onPress: () => {
                 const navigation = tabsNavigationRef.getRootNavigationRef();
                 const Page = tile.page;
@@ -35,116 +36,116 @@ export function patchTabsUI(tile: SettingsTile) {
                     render: () => <Page />,
                 });
             },
-            withArrow: true
-        }
-    }
+            withArrow: true,
+        },
+    };
 
     let rendererConfig = settingsConstants.SETTING_RENDERER_CONFIG;
 
     Object.defineProperty(settingsConstants, "SETTING_RENDERER_CONFIG", {
-		enumerable: true,
-		configurable: true,
-		get: () => ({
-			...rendererConfig,
-			...row,
-		}),
-		set: v => (rendererConfig = v),
-	});
+        enumerable: true,
+        configurable: true,
+        get: () => ({
+            ...rendererConfig,
+            ...row,
+        }),
+        set: (v) => (rendererConfig = v),
+    });
 
     const firstRender = Symbol("please work 🤞");
 
     try {
-        if(!createListModule) return;
+        if (!createListModule) return;
 
         patches.push(
-			after("createList", createListModule, function(args, ret) {
+            after(
+                "createList",
+                createListModule,
+                function (args, ret) {
+                    if (!args[0][firstRender]) {
+                        args[0][firstRender] = true;
 
-				if (!args[0][firstRender]) {
-					args[0][firstRender] = true;
+                        const [config] = args;
+                        const sections = config.sections;
 
-					const [config] = args;
-					const sections = config.sections;
+                        const section = sections?.find((x: any) =>
+                            ["Bunny", "Kettu", "Revenge"].some(
+                                (mod) => x.label === mod && x.title === mod,
+                            ),
+                        );
 
-					const section = sections?.find((x: any) =>
-						["Bunny", "Kettu", "Revenge"].some(
-							mod => x.label === mod && x.title === mod,
-						)
-					);
-                    
-                    // If not using these mods
-                    if(!section) {
-                        const isMainSettings = Boolean(
-                            sections?.find((x: any) => 
-                                x.settings[0] == "PREMIUM"
-                            )
-                        )
-                        
-                        if(isMainSettings) {
-                            // Add a new section to the top
-                            sections.unshift({
-                                label: manifest.name,
-                                title: manifest.name,
-                                settings: [tile.key]
-                            });
+                        // If not using these mods
+                        if (!section) {
+                            const isMainSettings = Boolean(
+                                sections?.find(
+                                    (x: any) => x.settings[0] == "PREMIUM",
+                                ),
+                            );
+
+                            if (isMainSettings) {
+                                // Add a new section to the top
+                                sections.unshift({
+                                    label: manifest.name,
+                                    title: manifest.name,
+                                    settings: [tile.key],
+                                });
+                            }
+                        }
+
+                        if (section?.settings) {
+                            section.settings = [...section.settings, tile.key];
                         }
                     }
-
-					if (section?.settings) {
-						section.settings = [...section.settings, tile.key];
-					}
-
-				}
-			},
-            true 
+                },
+                true,
             ),
-		);
+        );
     } catch {
         if (!SettingsOverviewScreen) return;
-		patches.push(
-			after("default", SettingsOverviewScreen, (args, ret) => {
+        patches.push(
+            after("default", SettingsOverviewScreen, (args, ret) => {
+                if (!args[0][firstRender]) {
+                    args[0][firstRender] = true;
 
-				if (!args[0][firstRender]) {
-					args[0][firstRender] = true;
-
-					const { sections } = findInReactTree(
-						ret,
-						i => i.props?.sections,
-					).props;
-					const section = sections?.find((x: any) =>
-						["Bunny", "Kettu", "Revenge"].some(
-							mod => x.label === mod && x.title === mod,
-						)
-					);
+                    const { sections } = findInReactTree(
+                        ret,
+                        (i) => i.props?.sections,
+                    ).props;
+                    const section = sections?.find((x: any) =>
+                        ["Bunny", "Kettu", "Revenge"].some(
+                            (mod) => x.label === mod && x.title === mod,
+                        ),
+                    );
 
                     // If not using these mods
-                    if(!section) {
+                    if (!section) {
                         const isMainSettings = Boolean(
-                            sections?.find((x: any) => 
-                                x.settings[0] == "PREMIUM"
-                            )
-                        )
-                        
-                        if(isMainSettings) {
+                            sections?.find(
+                                (x: any) => x.settings[0] == "PREMIUM",
+                            ),
+                        );
+
+                        if (isMainSettings) {
                             // Add a new section to the top
                             sections.unshift({
                                 label: manifest.name,
                                 title: manifest.name,
-                                settings: [tile.key]
+                                settings: [tile.key],
                             });
                         }
                     }
 
-					if (section?.settings) {
-						section.settings = [...section.settings, tile.key];
-					}
-				}
-			}),
-		);
+                    if (section?.settings) {
+                        section.settings = [...section.settings, tile.key];
+                    }
+                }
+            }),
+        );
     }
 
     return () => {
         for (const unpatch of patches) {
             unpatch();
         }
-    }
+    };
 }

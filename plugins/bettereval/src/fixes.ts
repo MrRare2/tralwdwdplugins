@@ -1,5 +1,5 @@
 import { findByProps } from "@vendetta/metro";
-import { before } from "@vendetta/patcher";
+import { before } from "@lib/patcher";
 
 const util = findByProps("inspect");
 

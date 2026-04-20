@@ -15,7 +15,7 @@ export default function Settings() {
         >
             <TableRowGroup title={"Settings"}>
                 <TableSwitchRow
-                    label={"Add button to chats."}
+                    label={"Add button to chats"}
                     subLabel={
                         "Add the JumpToTop button above the Jump to Present button in chats."
                     }
@@ -23,12 +23,20 @@ export default function Settings() {
                     onValueChange={(result) => (storage.jumpToPresent = result)}
                 />
                 <TableSwitchRow
-                    label={"Add button to action sheets."}
+                    label={"Add button to action sheets"}
                     subLabel={
                         "Add the JumpToTop button to channel and forum action sheets."
                     }
                     value={storage.actionSheets}
                     onValueChange={(result) => (storage.actionSheets = result)}
+                />
+                <TableSwitchRow
+                    label={"Switch back to the old colors"}
+                    subLabel={
+                        "Switch back to old Jump To Present button color in dark mode (grey)."
+                    }
+                    value={storage.oldButton}
+                    onValueChange={(result) => (storage.oldButton = result)}
                 />
             </TableRowGroup>
         </Stack>

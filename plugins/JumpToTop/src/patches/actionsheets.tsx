@@ -3,7 +3,11 @@ import { ReactNative as RN } from "@vendetta/metro/common";
 import { after } from "@lib/patcher";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { findInReactTree } from "@vendetta/utils";
-import { jumpToTopOfDifferentChannel, jumpToTopOfForum } from "../utils";
+import {
+    ChannelType,
+    jumpToTopOfDifferentChannel,
+    jumpToTopOfForum,
+} from "../utils";
 import { storage } from "../storage";
 
 const { ActionSheetRow } = findByProps("ActionSheetRow");
@@ -45,8 +49,17 @@ function buildJumpToTopRow(onPress: () => void) {
     );
 }
 
-// https://docs.discord.food/resources/channel#channel-type
-const allowedChannelTypes = [0, 1, 2, 3, 5, 6, 10, 11, 12];
+const allowedChannelTypes = [
+    ChannelType.GUILD_TEXT,
+    ChannelType.DM,
+    ChannelType.GUILD_VOICE,
+    ChannelType.GROUP_DM,
+    ChannelType.GUILD_NEWS,
+    ChannelType.GUILD_STORE,
+    ChannelType.NEWS_THREAD,
+    ChannelType.PUBLIC_THREAD,
+    ChannelType.PRIVATE_THREAD,
+];
 
 export function patchActionSheets() {
     const patches: (() => void)[] = [];

@@ -1,10 +1,11 @@
 import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
-import { after } from "@vendetta/patcher";
+import { after } from "@lib/patcher";
 import { React } from "@vendetta/metro/common";
 import JumpToTopButton from "../components/JumpToTopButton";
 import { storage } from "../storage";
-import { logger } from "@vendetta";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { OldButtons } from "../components/OldButtons";
+import { ChannelType } from "../utils";
 
 const JumpToPresentModule = findByName("JumpToPresentButton", false);
 const Design = findByProps("Stack", "Button", "Text");
@@ -36,15 +37,27 @@ export function patchJumpToPresent() {
             const { type: channelType, guild_id: guildId } =
                 ChannelStore.getChannel(channelId);
 
+            // Voice channel text counts as different channel
+            const isNotCurrentChannel = channelType === ChannelType.GUILD_VOICE;
+
             original.props.children = (
                 <Stack>
-                    <JumpToTopButton
-                        // Voice channel text counts as different channel
-                        isNotCurrentChannel={channelType === 2}
-                        details={{ channelId, guildId }}
-                        JumpToPresentButton={JumpToPresentButton}
-                    />
-                    {JumpToPresentButton}
+                    {!storage.oldButton ? (
+                        <>
+                            <JumpToTopButton
+                                isNotCurrentChannel={isNotCurrentChannel}
+                                details={{ channelId, guildId }}
+                                JumpToPresentButton={JumpToPresentButton}
+                            />
+                            {JumpToPresentButton}
+                        </>
+                    ) : (
+                        <OldButtons
+                            isNotCurrentChannel={channelType === 2}
+                            details={{ channelId, guildId }}
+                            JumpToPresentButton={JumpToPresentButton}
+                        />
+                    )}
                 </Stack>
             );
         },
