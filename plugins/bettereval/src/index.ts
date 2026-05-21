@@ -16,9 +16,8 @@ export default {
                 icon: getAssetIDByName(manifest.vendetta?.icon ?? ""),
                 title: () => "Evaluate JavaScript",
                 page: EvalPage,
-            })
+            }),
         );
-
         patches.push(patchInspect());
     },
 

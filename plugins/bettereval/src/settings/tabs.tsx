@@ -6,13 +6,9 @@ import { manifest } from "@vendetta/plugin";
 import { findInReactTree } from "@vendetta/utils";
 
 const { TableRowIcon } = findByProps("TableRowIcon");
-
 const tabsNavigationRef = findByProps("getRootNavigationRef");
-
 const settingsConstants = findByProps("SETTING_RENDERER_CONFIG");
-
 const createListModule = findByProps("createList");
-
 const SettingsOverviewScreen = findByName("SettingsOverviewScreen");
 
 export function patchTabsUI(tile: SettingsTile) {
@@ -22,6 +18,7 @@ export function patchTabsUI(tile: SettingsTile) {
         [tile.key]: {
             type: "pressable",
             title: tile.title,
+            useTitle: tile.title,
             icon: tile.icon,
             IconComponent:
                 tile.icon && (() => <TableRowIcon source={tile.icon} />),
@@ -45,10 +42,7 @@ export function patchTabsUI(tile: SettingsTile) {
     Object.defineProperty(settingsConstants, "SETTING_RENDERER_CONFIG", {
         enumerable: true,
         configurable: true,
-        get: () => ({
-            ...rendererConfig,
-            ...row,
-        }),
+        get: () => ({ ...rendererConfig, ...row }),
         set: (v) => (rendererConfig = v),
     });
 
