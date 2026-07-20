@@ -18,7 +18,7 @@ export function EvalPage() {
         <RN.ScrollView contentContainerStyle={{ padding: 16 }}>
             <Stack spacing={16}>
                 <TextArea
-                    onChange={(v) => setCode(v)}
+                    onChange={(v: string) => setCode(v)}
                     placeholder="bunny.metro.findByProps"
                 />
                 <TableRowGroup>

@@ -36,7 +36,8 @@ export function jumpToTop(
     details: { guildId?: string; channelId?: string },
 ): unknown {
     return isNotCurrentChannel
-        ? () => jumpToTopOfDifferentChannel(details.guildId, details.channelId)
+        ? () =>
+              jumpToTopOfDifferentChannel(details.guildId!, details.channelId!)
         : jumpToTopOfCurrentChannel;
 }
 

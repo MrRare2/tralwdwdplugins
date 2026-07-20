@@ -20,7 +20,9 @@ export default function Settings() {
                         "Add the JumpToTop button above the Jump to Present button in chats."
                     }
                     value={storage.jumpToPresent}
-                    onValueChange={(result) => (storage.jumpToPresent = result)}
+                    onValueChange={(result: boolean) =>
+                        (storage.jumpToPresent = result)
+                    }
                 />
                 <TableSwitchRow
                     label={"Add button to action sheets"}
@@ -28,7 +30,9 @@ export default function Settings() {
                         "Add the JumpToTop button to channel and forum action sheets."
                     }
                     value={storage.actionSheets}
-                    onValueChange={(result) => (storage.actionSheets = result)}
+                    onValueChange={(result: boolean) =>
+                        (storage.actionSheets = result)
+                    }
                 />
                 <TableSwitchRow
                     label={"Switch back to the old colors"}
@@ -36,7 +40,9 @@ export default function Settings() {
                         "Switch back to old Jump To Present button color in dark mode (grey)."
                     }
                     value={storage.oldButton}
-                    onValueChange={(result) => (storage.oldButton = result)}
+                    onValueChange={(result: boolean) =>
+                        (storage.oldButton = result)
+                    }
                 />
             </TableRowGroup>
         </Stack>
