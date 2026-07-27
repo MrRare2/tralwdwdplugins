@@ -6,7 +6,7 @@ import { EvalPage } from "./EvalPage";
 
 import { patchInspect } from "./fixes";
 
-const patches: (() => void)[] = [];
+let patches: (() => void)[] = [];
 
 export default {
     onLoad() {
@@ -25,5 +25,7 @@ export default {
         for (const unpatch of patches) {
             unpatch();
         }
+
+        patches = [];
     },
 };

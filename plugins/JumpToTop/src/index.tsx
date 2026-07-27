@@ -6,7 +6,7 @@ import { plugins } from "@vendetta/plugins";
 import CharCounterWarningModal from "./components/CharCounterWarningModal";
 import { findByProps } from "@vendetta/metro";
 
-const patches: (() => void)[] = [];
+let patches: (() => void)[] = [];
 
 const { openAlert } = findByProps("openAlert", "dismissAlert");
 
@@ -32,6 +32,8 @@ export default {
         for (const unpatch of patches) {
             unpatch();
         }
+
+        patches = [];
     },
 
     settings,
