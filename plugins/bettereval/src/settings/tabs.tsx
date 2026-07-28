@@ -72,7 +72,7 @@ export function patchTabsUI(tile: SettingsTile) {
                         if (!section) {
                             const isMainSettings = Boolean(
                                 sections?.find(
-                                    (x: any) => x.settings[0] == "PREMIUM",
+                                    (x: any) => x.settings.includes("ACCOUNT"),
                                 ),
                             );
 
@@ -115,7 +115,7 @@ export function patchTabsUI(tile: SettingsTile) {
                     if (!section) {
                         const isMainSettings = Boolean(
                             sections?.find(
-                                (x: any) => x.settings[0] == "PREMIUM",
+                                (x: any) => x.settings.includes("ACCOUNT"),
                             ),
                         );
 
