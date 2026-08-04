@@ -1,17 +1,18 @@
-import { patchSearchListRow } from "./patches/searchlistrow";
+import { createUnpatcher } from "@lib/patcher";
+import {
+    patchMessageActionSheet,
+    patchSearchListRow,
+} from "./patches/searchlistrow";
 
-let patches: (() => void)[] = [];
+const { cleanup, stop } = createUnpatcher();
 
 export default {
     onLoad() {
-        patches.push(patchSearchListRow());
+        patchSearchListRow(cleanup);
+        patchMessageActionSheet(cleanup);
     },
 
     onUnload() {
-        for (const unpatch of patches) {
-            unpatch();
-        }
-
-        patches = [];
+        stop();
     },
 };

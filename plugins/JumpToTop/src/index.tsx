@@ -5,8 +5,9 @@ import { initStorage, storage } from "./storage";
 import { plugins } from "@vendetta/plugins";
 import CharCounterWarningModal from "./components/CharCounterWarningModal";
 import { findByProps } from "@vendetta/metro";
+import { createUnpatcher } from "@lib/patcher";
 
-let patches: (() => void)[] = [];
+const { cleanup, stop } = createUnpatcher();
 
 const { openAlert } = findByProps("openAlert", "dismissAlert");
 
@@ -14,8 +15,8 @@ export default {
     onLoad() {
         initStorage();
 
-        patches.push(patchJumpToPresent());
-        patches.push(patchActionSheets());
+        patchJumpToPresent(cleanup);
+        patchActionSheets(cleanup);
 
         if (
             hasEnabledCharCounterPlugin() &&
@@ -29,11 +30,7 @@ export default {
     },
 
     onUnload() {
-        for (const unpatch of patches) {
-            unpatch();
-        }
-
-        patches = [];
+        stop();
     },
 
     settings,
