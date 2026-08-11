@@ -2,9 +2,9 @@ import { React } from "@vendetta/metro/common";
 import { ReactNative as RN } from "@vendetta/metro/common";
 import { findByProps } from "@vendetta/metro";
 import { Codeblock } from "@vendetta/ui/components";
+import { clipboard } from "@vendetta/metro/common"; // or findByProps("setString")
 
 const util = findByProps("inspect");
-
 const Design = findByProps("Stack", "Button");
 const { Stack, Button, TableRowGroup, TableSwitchRow, TextArea } = Design;
 
@@ -35,13 +35,11 @@ export function EvalPage() {
                         onValueChange={setShowHidden}
                     />
                 </TableRowGroup>
+
                 <Button
                     onPress={async function () {
                         try {
-                            const res = (0, eval)(
-                                `${code}//# sourceURL=BetterEval`,
-                            );
-
+                            const res = (0, eval)(`${code}//# sourceURL=BetterEval`);
                             setResult(
                                 util.inspect(awaitResult ? await res : res, {
                                     showHidden,
@@ -53,7 +51,8 @@ export function EvalPage() {
                     }}
                     text="Evaluate"
                 />
-                <Codeblock>{result}</Codeblock>
+
+                <Codeblock selectable>{result}</Codeblock>
             </Stack>
         </RN.ScrollView>
     );
