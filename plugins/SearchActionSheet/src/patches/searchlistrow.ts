@@ -8,6 +8,8 @@ const UserStore = findByStoreName("UserStore");
 export function patchSearchListRow(cleanup: Cleanup) {
     cleanup(
         after("type", SearchListRow, ([props], ret) => {
+            if (typeof props.label === "string") return;
+
             // extract data from label props
             const { message, channel } = props.label.props;
             const user = UserStore.getUser(message.author.id);

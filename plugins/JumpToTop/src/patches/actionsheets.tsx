@@ -1,5 +1,5 @@
 import { after, Cleanup } from "@lib/patcher";
-import { findByName, findByProps } from "@vendetta/metro";
+import { find, findByName, findByProps } from "@vendetta/metro";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { findInReactTree } from "@vendetta/utils";
 import { UpsideDown } from "../components/UpsideDown";
@@ -12,14 +12,28 @@ import {
 
 const { ActionSheetRow } = findByProps("ActionSheetRow");
 
-const ForumPostLongPressActionSheet = findByName(
-    "ForumPostLongPressActionSheet",
+// TODO: switch back to name based filter once stable reaches 350202
+
+declare global {
+    interface Window {
+        bunny: {
+            metro: {
+                findByFilePath: (path: string, defaultExp?: boolean) => any;
+            }
+        }
+    }
+}
+
+const { findByFilePath } = window.bunny.metro;
+
+const ForumPostLongPressActionSheet = findByFilePath(
+    "modules/action_sheet/native/components/LongPressForumPostActionSheet.tsx",
     false,
 );
 
-const ChannelLongPressActionSheet = findByName(
-    "ChannelLongPressActionSheet",
-    false,
+const ChannelLongPressActionSheet = findByFilePath(
+    "modules/channel/native/ChannelLongPressActionSheet.tsx",
+    false
 );
 
 const SYM_PATCHED = Symbol.for("Patched by JumpToTop");
@@ -27,7 +41,10 @@ const SYM_PATCHED = Symbol.for("Patched by JumpToTop");
 function findActionGroups(tree: any) {
     return findInReactTree(
         tree,
-        (node) => node?.[0]?.type?.name === "ActionSheetRowGroup",
+        (node) => node?.[0]?.props?.children
+            ?.find?.(
+                (child: any) => child?.props.label
+            )
     );
 }
 

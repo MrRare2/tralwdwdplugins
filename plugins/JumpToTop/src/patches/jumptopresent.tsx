@@ -7,7 +7,24 @@ import { OldButtons } from "../components/OldButtons";
 import { storage } from "../storage";
 import { ChannelType } from "../utils";
 
-const JumpToPresentModule = findByName("JumpToPresentButton", false);
+// TODO: switch back to name based filter once stable reaches 350202
+
+declare global {
+    interface Window {
+        bunny: {
+            metro: {
+                findByFilePath: (path: string, defaultExp?: boolean) => any;
+            }
+        }
+    }
+}
+
+const { findByFilePath } = window.bunny.metro;
+
+const JumpToPresentModule = findByFilePath(
+    "components_native/chat/JumpToPresentButton.tsx",
+    false,
+);
 const Design = findByProps("Stack", "Button", "Text");
 const { Stack } = Design;
 
